@@ -11,7 +11,7 @@ class GUI:
                    Board.WHITE_TURN: "White's turn",
                    Board.WHITE_WIN: 'White wins!',
                    Board.DRAW: 'Draw!'}
-    res_path = 'src/res/'
+    res_path = 'res/'
     img_name = {Board.EMPTY_SLOT: 'empty.gif',
                 Board.BLACK_SLOT: 'black.gif', 
                 Board.WHITE_SLOT: 'white.gif'}
