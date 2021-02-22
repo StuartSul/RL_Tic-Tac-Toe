@@ -1,8 +1,8 @@
-from threading import Thread
-from time import sleep
 from src.ai.random import Random
 from src.ai.rl import RL
 from src.engine.board import Board
+from threading import Thread
+from time import sleep
 
 AI_TYPES = ['random', 'reinforcement_learning']
 
@@ -43,7 +43,7 @@ class AI:
         if ai_type == 'random':
             algorithm = Random(self.board)
         elif ai_type == 'reinforcement_learning':
-            algorithm = RL(self.board)
+            algorithm = RL(self.board, status_condition)
         sleep(2.0) # To prevent it from starting before GUI loads up
         while not self.exit_flag:
             if self.board.status == status_condition:

@@ -1,6 +1,6 @@
-from tkinter import Tk, Frame, Label, Button, PhotoImage
 from src.engine.board import Board
 from src.gui.boardslot import BoardSlot
+from tkinter import Tk, Frame, Label, Button, PhotoImage
 
 TK_SILENCE_DEPRECATION = 1
 

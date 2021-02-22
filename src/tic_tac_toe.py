@@ -1,6 +1,6 @@
+from src.ai.ai import AI
 from src.engine.board import Board
 from src.gui.gui import GUI
-from src.ai.ai import AI
 
 SIZE = 3
 AI_WHITE_ENABLE = True

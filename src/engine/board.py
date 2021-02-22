@@ -1,6 +1,6 @@
-from threading import Lock
 from src.engine.rules import Rules
 from src.engine.traces import Traces
+from threading import Lock
 
 class Board:
     """Tic-tac-toe game board engine"""
