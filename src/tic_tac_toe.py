@@ -5,7 +5,7 @@ from src.ai.ai import AI
 SIZE = 3
 AI_WHITE_ENABLE = True
 AI_BLACK_ENABLE = False
-AI_WHITE_ALGORITHM = 'random'
+AI_WHITE_ALGORITHM = 'reinforcement_learning'
 AI_BLACK_ALGORITHM = 'random'
 AI_ENABLED = AI_WHITE_ENABLE or AI_BLACK_ENABLE
 
