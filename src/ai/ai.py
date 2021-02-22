@@ -41,14 +41,14 @@ class AI:
 
     def play(self, status_condition, ai_type):
         if ai_type == 'random':
-            algorithm = Random()
+            algorithm = Random(self.board)
         elif ai_type == 'reinforcement_learning':
-            algorithm = RL()
+            algorithm = RL(self.board)
         sleep(2.0) # To prevent it from starting before GUI loads up
         while not self.exit_flag:
             if self.board.status == status_condition:
                 self.board.lock.acquire()
-                (i, j) = algorithm.decide_next_move(self.board)
+                (i, j) = algorithm.decide_next_move()
                 self.board.lock.release()
                 self.board.print('AI({}) - '.format(ai_type), end='')
                 self.board.place(i, j)
