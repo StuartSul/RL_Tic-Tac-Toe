@@ -2,9 +2,11 @@ from src.engine.board import Board
 from random import random
 
 class Random:
-    def decide_next_move(self, board_instance):
+    def __init__(self, board):
+        self.board = board
 
-        board = board_instance.board
+    def decide_next_move(self):
+        board = self.board.board
         num_empty_slots = 0
 
         for i in range(len(board)):
