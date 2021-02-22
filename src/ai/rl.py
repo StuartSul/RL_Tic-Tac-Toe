@@ -1,7 +1,7 @@
 from src.engine.board import Board
 from random import random
 
-class Random:
+class RL:
     def decide_next_move(self, board_instance):
 
         board = board_instance.board

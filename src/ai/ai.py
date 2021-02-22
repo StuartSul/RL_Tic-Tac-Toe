@@ -1,6 +1,7 @@
 from threading import Thread
 from time import sleep
 from src.ai.random import Random
+from src.ai.rl import RL
 from src.engine.board import Board
 
 AI_TYPES = ['random', 'reinforcement_learning']
@@ -24,7 +25,7 @@ class AI:
             self.board.print('Invalid AI type; must be one of following:', AI_TYPES)
         else:
             self.threads.append((Thread(target=lambda : self.play(status_condition, ai_type)), status_condition))
-            self.board.print('Omok AI loaded with condition ' + str(status_condition))
+            self.board.print('Omok AI loaded with condition ' + str(status_condition) + ' and ' + ai_type + ' algorithm')
     
     def start(self):
         self.exit_flag = False
@@ -41,6 +42,8 @@ class AI:
     def play(self, status_condition, ai_type):
         if ai_type == 'random':
             algorithm = Random()
+        elif ai_type == 'reinforcement_learning':
+            algorithm = RL()
         sleep(2.0) # To prevent it from starting before GUI loads up
         while not self.exit_flag:
             if self.board.status == status_condition:
