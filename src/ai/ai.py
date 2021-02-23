@@ -1,3 +1,4 @@
+from config import Config
 from src.ai.random import Random
 from src.ai.rl import RL
 from src.engine.board import Board
@@ -24,8 +25,13 @@ class AI:
         elif ai_type not in AI_TYPES:
             self.board.print('Invalid AI type; must be one of following:', AI_TYPES)
         else:
-            self.threads.append((Thread(target=lambda : self.play(status_condition, ai_type)), status_condition))
-            self.board.print('Omok AI loaded with condition ' + str(status_condition) + ' and ' + ai_type + ' algorithm')
+            if (status_condition == Board.BLACK_TURN and Config.TRAIN_BLACK) or\
+                (status_condition == Board.WHITE_TURN and Config.TRAIN_WHITE):
+                self.threads.append((Thread(target=lambda : self.train(status_condition, ai_type)), status_condition))
+                self.board.print('Omok AI loaded with condition ' + str(status_condition) + ' and ' + ai_type + ' algorithm (training mode)')
+            else:
+                self.threads.append((Thread(target=lambda : self.play(status_condition, ai_type)), status_condition))
+                self.board.print('Omok AI loaded with condition ' + str(status_condition) + ' and ' + ai_type + ' algorithm')
     
     def start(self):
         self.exit_flag = False
@@ -52,5 +58,37 @@ class AI:
                 self.board.lock.release()
                 self.board.print('AI({}) - '.format(ai_type), end='')
                 self.board.place(i, j)
+            else:
+                sleep(0.1)
+    
+    def train(self, status_condition, ai_type):
+        if ai_type == 'random':
+            print('Cannot train random AI! Exiting...')
+            quit(0)
+        elif ai_type == 'reinforcement_learning':
+            algorithm = RL(self.board, status_condition)
+        sleep(2.0) # To prevent it from starting before GUI loads up
+        while not self.exit_flag:
+            if self.board.status == status_condition:
+                self.board.lock.acquire()
+                (i, j) = algorithm.decide_next_move_train()
+                self.board.lock.release()
+                self.board.print('AI({}) - '.format(ai_type), end='')
+                self.board.place(i, j)
+            elif (self.board.status == Board.BLACK_WIN and\
+                status_condition == Board.WHITE_TURN) or\
+                    (self.board.status == Board.WHITE_WIN and\
+                        status_condition == Board.BLACK_TURN):
+                            print('1')
+                            self.board.lock.acquire()
+                            algorithm.update_policy_loss()
+                            self.board.lock.release()
+                            self.board.reset()
+            elif self.board.status != Board.BLACK_TURN and\
+                self.board.status != Board.WHITE_TURN:
+                    self.board.lock.acquire()
+                    algorithm.reset_prev_str()
+                    self.board.lock.release()
+                    self.board.reset()
             else:
                 sleep(0.1)
