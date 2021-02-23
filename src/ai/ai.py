@@ -79,7 +79,6 @@ class AI:
                 status_condition == Board.WHITE_TURN) or\
                     (self.board.status == Board.WHITE_WIN and\
                         status_condition == Board.BLACK_TURN):
-                            print('1')
                             self.board.lock.acquire()
                             algorithm.update_policy_loss()
                             self.board.lock.release()

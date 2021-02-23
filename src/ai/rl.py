@@ -15,7 +15,7 @@ class RL:
         self.model_path = '{}{}_{}.{}'.format(
             Config.MODEL_DIRPATH, Config.MODEL_FILENAME, 'B' if self.color ==\
                 Board.BLACK_SLOT else 'W', Config.MODEL_EXTENSION)
-        print('Loading model from : ' + self.model_path)
+        self.board.print('Loading model from : ' + self.model_path)
         self.policy = self.initiate_policy()
         self.prev_str = None
 
@@ -51,7 +51,7 @@ class RL:
                 Config.LEARNING_RATE * (self.policy[next_str] -\
                     self.policy[self.prev_str])
         self.prev_str = next_str
-        self.save_policy()
+        # self.save_policy()
     
     def update_policy_loss(self):
         if self.prev_str == None:
@@ -61,6 +61,7 @@ class RL:
         self.reset_prev_str()
         
     def reset_prev_str(self):
+        self.save_policy()
         self.prev_str = None
  
     def decide_next_move(self):
@@ -95,7 +96,7 @@ class RL:
             for j in range(len(curr[i])):
                 if curr[i][j] == Board.EMPTY_SLOT:
                     evaluations[(i, j)] = self.evaluate(curr, (i, j))
-        print('evaluations collected : ' + str(evaluations))
+        self.board.print('evaluations collected : ' + str(evaluations))
 
         # Sort the moves by value, in decreasing order
         moves_by_value = list(dict(reversed(sorted(
@@ -103,10 +104,10 @@ class RL:
         
         # Pick the best move, or explore other options
         if random() > Config.EXPLORATION_CHANCE:
-            print('picking the best move')
+            self.board.print('picking the best move')
             next_move = moves_by_value[0]
         else:
-            print('exploring other moves')
+            self.board.print('exploring other moves')
             next_move = moves_by_value[int(random() * len(moves_by_value))]
 
         # Update policy and return
