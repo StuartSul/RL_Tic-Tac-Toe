@@ -1,3 +1,5 @@
+from config import Config
+
 class Rules:
     DIRECTIONS = {
         'W-E' : (0, 1),
@@ -9,7 +11,7 @@ class Rules:
     @staticmethod
     def is_defeat(board, i, j):
         for direction in Rules.DIRECTIONS.values():
-            if Rules.count(board, i, j, direction) == len(board):
+            if Rules.count(board, i, j, direction) == Config.WIN_CONDITION:
                 return True
         return False
 

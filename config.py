@@ -1,5 +1,6 @@
 class Config:
     SIZE = 3
+    WIN_CONDITION = 3 # Must be less than or equal to SIZE
     SILENT = True
     GUI = True
     AI_WHITE_ENABLE = True
