@@ -51,7 +51,6 @@ class RL:
                 Config.LEARNING_RATE * (self.policy[next_str] -\
                     self.policy[self.prev_str])
         self.prev_str = next_str
-        # self.save_policy()
     
     def update_policy_loss(self):
         if self.prev_str == None:
@@ -61,7 +60,6 @@ class RL:
         self.reset_prev_str()
         
     def reset_prev_str(self):
-        self.save_policy()
         self.prev_str = None
  
     def decide_next_move(self):

@@ -14,7 +14,7 @@ def run():
         GUI(board)
     elif Config.TRAIN_WHITE or Config.TRAIN_BLACK:
         while True:
-            sleep
+            sleep(1)
 
     if Config.AI_WHITE_ENABLE or Config.AI_BLACK_ENABLE:
         ai.stop()
