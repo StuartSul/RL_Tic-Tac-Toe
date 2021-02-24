@@ -12,9 +12,9 @@ class RL:
              Board.BLACK_TURN else Board.WHITE_SLOT
         self.enemy = Board.WHITE_SLOT if status_condition ==\
              Board.BLACK_TURN else Board.BLACK_SLOT
-        self.model_path = '{}{}_{}.{}'.format(
+        self.model_path = '{}{}_{}_S{}_C{}.{}'.format(
             Config.MODEL_DIRPATH, Config.MODEL_FILENAME, 'B' if self.color ==\
-                Board.BLACK_SLOT else 'W', Config.MODEL_EXTENSION)
+                Board.BLACK_SLOT else 'W', Config.SIZE, Config.WIN_CONDITION, Config.MODEL_EXTENSION)
         self.board.print('Loading model from : ' + self.model_path)
         self.policy = self.initiate_policy()
         self.prev_str = None
