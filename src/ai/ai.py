@@ -4,6 +4,7 @@ from src.ai.rl import RL
 from src.engine.board import Board
 from threading import Thread
 from time import sleep
+from tqdm import tqdm
 
 AI_TYPES = ['random', 'reinforcement_learning']
 
@@ -81,7 +82,6 @@ class AI:
                 sleep(self.sleeptime)
     
     def train(self):
-        iter = 1
         train_white = False
         train_black = False
         if Config.AI_WHITE_ENABLE and Config.TRAIN_WHITE:
@@ -96,78 +96,52 @@ class AI:
             sleep(2.0) # To prevent it from starting before GUI loads up
         elif train_white and train_black:
             self.sleeptime = 0
-        while not self.exit_flag and iter < Config.TARGET_EPOCH:
-            if self.board.status == Board.WHITE_TURN and train_white:
-                self.board.lock.acquire()
-                (i, j) = algorithm_white.decide_next_move_train()
-                self.board.lock.release()
-                self.board.print('AI({}) - '.format(Config.AI_WHITE_ALGORITHM), end='')
-                self.board.place(i, j)
-            elif self.board.status == Board.BLACK_TURN and train_black:
-                self.board.lock.acquire()
-                (i, j) = algorithm_black.decide_next_move_train()
-                self.board.lock.release()
-                self.board.print('AI({}) - '.format(Config.AI_BLACK_ALGORITHM), end='')
-                self.board.place(i, j)
-            elif self.board.status == Board.BLACK_WIN and train_white:
-                self.board.lock.acquire()
+        for iter in tqdm(range(1, Config.TARGET_EPOCH), desc='Training...'):
+            if self.exit_flag:
+                break
+            while not self.exit_flag:
+                if self.board.status == Board.WHITE_TURN and train_white:
+                    self.board.lock.acquire()
+                    (i, j) = algorithm_white.decide_next_move_train()
+                    self.board.lock.release()
+                    self.board.print('AI({}) - '.format(Config.AI_WHITE_ALGORITHM), end='')
+                    self.board.place(i, j)
+                elif self.board.status == Board.BLACK_TURN and train_black:
+                    self.board.lock.acquire()
+                    (i, j) = algorithm_black.decide_next_move_train()
+                    self.board.lock.release()
+                    self.board.print('AI({}) - '.format(Config.AI_BLACK_ALGORITHM), end='')
+                    self.board.place(i, j)
+                elif self.board.status != Board.BLACK_TURN and\
+                    self.board.status != Board.WHITE_TURN:
+                        break
+                else:
+                    sleep(self.sleeptime)
+
+            if self.board.status == Board.BLACK_WIN and train_white:
                 algorithm_white.update_policy_loss()
-                self.board.lock.release()
-                if iter % Config.SAVE_INTERVAL == 0:
-                    algorithm_white.save_policy()
                 if train_black:
-                    self.board.lock.acquire()
                     algorithm_black.reset_prev_str()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_black.save_policy()
-                self.board.reset()
-                iter += 1
             elif self.board.status == Board.WHITE_WIN and train_black:
-                self.board.lock.acquire()
                 algorithm_black.update_policy_loss()
-                self.board.lock.release()
-                if iter % Config.SAVE_INTERVAL == 0:
-                    algorithm_black.save_policy()
                 if train_white:
-                    self.board.lock.acquire()
                     algorithm_white.reset_prev_str()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_white.save_policy()
-                self.board.reset()
-                iter += 1
             elif self.board.status == Board.DRAW:
                 if train_white:
-                    self.board.lock.acquire()
                     algorithm_white.update_policy_loss()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_white.save_policy()
                 if train_black:
-                    self.board.lock.acquire()
                     algorithm_black.update_policy_loss()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_black.save_policy()
-                self.board.reset()
-                iter += 1
             elif self.board.status != Board.BLACK_TURN and\
                 self.board.status != Board.WHITE_TURN:
                 if train_white:
-                    self.board.lock.acquire()
                     algorithm_white.reset_prev_str()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_white.save_policy()
                 if train_black:
-                    self.board.lock.acquire()
                     algorithm_black.reset_prev_str()
-                    self.board.lock.release()
-                    if iter % Config.SAVE_INTERVAL == 0:
-                        algorithm_black.save_policy()
-                self.board.reset()
-                iter += 1
-            else:
-                sleep(self.sleeptime)
-            print(iter)
+
+            if iter % Config.SAVE_INTERVAL == 0:
+                if train_white:
+                    algorithm_white.save_policy()
+                if train_black:
+                    algorithm_black.save_policy()
+            self.board.reset()
+            

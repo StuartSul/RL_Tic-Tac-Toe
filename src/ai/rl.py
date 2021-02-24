@@ -25,6 +25,7 @@ class RL:
         else:
             with open(self.model_path, 'r') as model:
                 policy = eval(model.read())
+                print('AI: Loading model from ' + self.model_path)
         return policy
 
     def save_policy(self):
