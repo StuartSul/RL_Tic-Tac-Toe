@@ -1,13 +1,13 @@
 class Config:
     SIZE = 3
     SILENT = True
-    GUI = False
-    AI_WHITE_ENABLE = True
+    GUI = True
+    AI_WHITE_ENABLE = False
     AI_BLACK_ENABLE = True
     AI_WHITE_ALGORITHM = 'reinforcement_learning'
     AI_BLACK_ALGORITHM = 'reinforcement_learning'
-    TRAIN_WHITE = True
-    TRAIN_BLACK = True
+    TRAIN_WHITE = False
+    TRAIN_BLACK = False
     TARGET_EPOCH = 100000
     SAVE_INTERVAL = 5000
     LEARNING_RATE = 0.3
