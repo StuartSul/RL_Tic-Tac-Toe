@@ -78,12 +78,15 @@ class RL:
                     evaluations[(i, j)] = self.evaluate(curr, (i, j))
         
         # Sort the moves by value, in decreasing order
-        moves_by_value = list(dict(reversed(sorted(
-            evaluations.items(), key=lambda item: item[1]))).keys())
+        moves_by_value = dict(reversed(sorted(
+            evaluations.items(), key=lambda item: item[1])))
+        best_move = list(moves_by_value.keys())[0]
+        best_move_value = list(moves_by_value.values())[0]
         
         # Pick the best move, or explore other options
-        return moves_by_value[0]
-
+        self.board.print('  AI: This move has a value of ' + str(best_move_value))
+        return best_move
+        
     def decide_next_move_train(self):
         # evaluations : dictionary
         # key is a 2-tuple representing the next move
